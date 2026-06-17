@@ -60,6 +60,21 @@ export const { init, log } = createBoilerLogger({
 The local winston file/console transports are untouched — only the forward sink
 leaves the host, and only the forward sink receives scrubbed data.
 
+### New Relic APM config preset (a different channel from logs)
+
+The APM agent auto-captures request attributes and exception messages — separate
+from logs. Neutralise that channel via the preset in a consumer's `newrelic.js`:
+
+```js
+const { newrelicConfig } = require('dev-newrelic-scrub');
+exports.config = newrelicConfig({ app_name: ['hds-dev-bridge-mira'] });
+```
+
+Defaults: `strip_exception_messages` on (error text never leaves), `attributes.exclude`
+for headers/query params/bodies, SQL obfuscated, APM-side log forwarding off (dev-boiler
+is the forward path). Pass overrides to deep-merge over the preset. License key still
+comes from `NEW_RELIC_LICENSE_KEY`.
+
 ## Known limitations
 
 - The **Pryv username** (the apiEndpoint subdomain, e.g. `jdoe` in
