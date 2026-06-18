@@ -75,11 +75,17 @@ export function newrelicConfig (options: NewRelicConfigOptions = {}): Record<str
     },
     application_logging: {
       enabled: true,
-      // Local logs go through dev-boiler (already scrubbed); don't double-ship
-      // via the APM agent unless a consumer explicitly opts in.
-      forwarding: { enabled: false },
+      // Must be ON for recordLogEvent (our error-only forwarder) to work. Winston
+      // auto-instrumentation is disabled below so the agent does NOT forward every
+      // level — only the error logs we send via dev-boiler -> nrErrorLogger reach NR.
+      forwarding: { enabled: true },
       local_decorating: { enabled: false },
       metrics: { enabled: true }
+    },
+    instrumentation: {
+      // Stop NR from auto-forwarding ALL winston log levels. Error-level logs are
+      // forwarded explicitly (scrubbed) via recordLogEvent. See newrelicForward.ts.
+      winston: { enabled: false }
     },
     distributed_tracing: { enabled: true }
   };

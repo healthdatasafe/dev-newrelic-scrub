@@ -21,6 +21,12 @@
       "require": "./dist/boilerLogger.js",
       "default": "./dist/boilerLogger.js"
     },
+    "./nrErrorLogger": {
+      "types": "./src/nrErrorLogger.ts",
+      "import": "./src/nrErrorLogger.ts",
+      "require": "./dist/nrErrorLogger.js",
+      "default": "./dist/nrErrorLogger.js"
+    },
     "./src/*": "./src/*",
     "./dist/*": "./dist/*"
   },

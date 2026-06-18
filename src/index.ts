@@ -4,3 +4,4 @@ export { createBoilerLogger } from './boilerLogger.ts';
 export type { BoilerLogger, BoilerLoggerOptions, RedactedLogEntry } from './boilerLogger.ts';
 export { newrelicConfig, NR_ATTRIBUTE_EXCLUDE } from './newrelicConfig.ts';
 export type { NewRelicConfigOptions } from './newrelicConfig.ts';
+export { newRelicLogForward, createNewRelicErrorLogger } from './newrelicForward.ts';

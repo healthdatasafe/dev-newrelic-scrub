@@ -71,9 +71,27 @@ exports.config = newrelicConfig({ app_name: ['hds-dev-bridge-mira'] });
 ```
 
 Defaults: `strip_exception_messages` on (error text never leaves), `attributes.exclude`
-for headers/query params/bodies, SQL obfuscated, APM-side log forwarding off (dev-boiler
-is the forward path). Pass overrides to deep-merge over the preset. License key still
-comes from `NEW_RELIC_LICENSE_KEY`.
+for headers/query params/bodies, SQL obfuscated. Pass overrides to deep-merge over the
+preset. License key still comes from `NEW_RELIC_LICENSE_KEY`.
+
+### Error-only log forwarding to New Relic
+
+NR's agent can't level-filter forwarded logs (forwarding on ships every level). So the preset
+keeps `application_logging.forwarding` on (so `recordLogEvent` works) but disables NR's winston
+auto-instrumentation — and we forward **only error-level** logs ourselves, scrubbed, via
+dev-boiler's custom-logger hook. Wire it in the service's boiler config:
+
+```yaml
+logs:
+  custom:
+    active: true
+    path: dev-newrelic-scrub/nrErrorLogger
+```
+
+`nrErrorLogger` = `createNewRelicErrorLogger()` = `createBoilerLogger({ levels: ['error'],
+forward: newRelicLogForward() })`. dev-boiler calls it on every (already-scrubbed) log event;
+the level filter drops info/warn/debug; `recordLogEvent` ships the rest. Local file/console
+logs still get every level.
 
 ## Known limitations
 

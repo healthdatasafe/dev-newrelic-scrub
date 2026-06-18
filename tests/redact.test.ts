@@ -112,4 +112,25 @@ describe('createBoilerLogger', () => {
     const logger = createBoilerLogger();
     assert.doesNotThrow(() => logger.log('error', 'x', 'msg', { token: 't' }));
   });
+
+  it('with levels:[error], forwards only error-level entries', () => {
+    const seen: RedactedLogEntry[] = [];
+    const logger = createBoilerLogger({ levels: ['error'], forward: (e) => seen.push(e) });
+    logger.log('info', 'k', 'an info line');
+    logger.log('warn', 'k', 'a warn line');
+    logger.log('debug', 'k', 'a debug line');
+    logger.log('error', 'k', 'an error line');
+    assert.equal(seen.length, 1);
+    assert.equal(seen[0]!.level, 'error');
+    assert.equal(seen[0]!.message, 'an error line');
+  });
+});
+
+describe('newRelicLogForward', () => {
+  it('returns a sink that no-ops when the newrelic agent is absent', async () => {
+    const { newRelicLogForward } = await import('../src/newrelicForward.ts');
+    const sink = newRelicLogForward();
+    assert.equal(typeof sink, 'function');
+    assert.doesNotThrow(() => sink({ level: 'error', key: 'k', message: 'm' }));
+  });
 });

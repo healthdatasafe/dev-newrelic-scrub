@@ -32,6 +32,12 @@ export interface BoilerLoggerOptions {
    */
   forward?: (entry: RedactedLogEntry) => void;
   redactOptions?: RedactOptions;
+  /**
+   * If set, only these log levels are forwarded to the sink (e.g. `['error']`
+   * to keep info/warn/debug out of New Relic). Local file/console transports are
+   * unaffected — they still get every level. Default: forward all levels.
+   */
+  levels?: string[];
 }
 
 /**
@@ -41,12 +47,14 @@ export interface BoilerLoggerOptions {
  */
 export function createBoilerLogger (options: BoilerLoggerOptions = {}): BoilerLogger {
   const forward = options.forward ?? (() => {});
+  const levels = options.levels;
   return {
     async init (_settings?: unknown): Promise<void> {
       // No async setup needed for the redacting pass-through. A real forwarder
       // (NR client init, etc.) would establish its connection here.
     },
     log (level: string, key: string, message: string, context?: unknown): void {
+      if (levels && !levels.includes(level)) return;
       forward({
         level,
         key,
