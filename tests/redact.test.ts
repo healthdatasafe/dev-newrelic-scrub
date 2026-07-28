@@ -127,7 +127,13 @@ describe('createBoilerLogger', () => {
 });
 
 describe('newRelicLogForward', () => {
-  it('returns a sink that no-ops when the newrelic agent is absent', async () => {
+  // `newrelic` is a devDependency (the config tests interrogate the agent's own
+  // attribute filter), so it resolves here rather than being absent. Requiring it
+  // outside a real service still fails — no `app_name` — which is the same code
+  // path the sink must survive: `getApi` catches, returns null, the sink no-ops.
+  // The agent prints its bootstrap error to stderr while this runs; that is the
+  // agent talking, not a test failure.
+  it('returns a sink that no-ops when the newrelic agent is unavailable', async () => {
     const { newRelicLogForward } = await import('../src/newrelicForward.ts');
     const sink = newRelicLogForward();
     assert.equal(typeof sink, 'function');
