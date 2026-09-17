@@ -1,9 +1,9 @@
 /**
- * @pryv/boiler custom-logger adapter.
+ * dev-boiler custom-logger adapter.
  *
  * boiler calls a custom logger (registered via the `logs:custom:path` config key)
  * on EVERY log event: `log(level, key, message, context)` — see
- * `@pryv/boiler/src/logging.js`. That makes it the single chokepoint for anything
+ * `dev-boiler/src/logging.js`. That makes it the single chokepoint for anything
  * forwarded off-box (e.g. to New Relic). This adapter scrubs the message + context
  * through `redact` BEFORE handing the entry to a forward sink.
  *
