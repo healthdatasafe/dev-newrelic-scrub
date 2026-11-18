@@ -120,3 +120,7 @@ npm run setup
 ```
 npm run build
 ```
+
+## License
+
+[BSD-3-Clause](LICENSE)

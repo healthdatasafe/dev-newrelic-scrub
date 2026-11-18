@@ -39,7 +39,8 @@
     "lint:fix": "eslint . --fix",
     "lint:change": "eslint $(git diff --name-only HEAD | grep -E '\\.(ts|tsx)$' | xargs)",
     "typecheck": "tsc --noEmit",
-    "setup": "npm install && npm run build"
+    "setup": "npm install && npm run build",
+    "license": "source-licenser -c .licenser.yml ."
   },
   "license": "BSD-3-Clause",
   "devDependencies": {
@@ -50,9 +51,11 @@
     "mocha": "^10.7.3",
     "neostandard": "^0.12.0",
     "newrelic": "^14.3.4",
+    "source-licenser": "^2.0.6",
     "typescript": "^5.9.3"
   },
   "overrides": {
     "serialize-javascript": "^7.0.5"
-  }
+  },
+  "author": "Health Data Safe (https://www.healthdatasafe.org)"
 }
